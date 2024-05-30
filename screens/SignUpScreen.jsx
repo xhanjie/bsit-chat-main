@@ -7,7 +7,8 @@ import { avatars } from "../utils/supports";
 import { MaterialIcons } from "@expo/vector-icons";
 import { BlurView } from "expo-blur";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { firebaseAuth } from "../config/firebase.config"; // Correct import
+import { firebaseAuth, firestoreDB } from "../config/firebase.config"; // Correct import
+import { doc, setDoc } from "firebase/firestore";
 
 const SignUpScreen = () => {
   const screenWidht = Math.round(Dimensions.get("window").width);
@@ -30,13 +31,23 @@ const SignUpScreen = () => {
   const handleSignUp = async () => {
     if (getEmailValidationStatus && email !== "") {
       await createUserWithEmailAndPassword(firebaseAuth, email, password)
-        .then(userCred => {
-          console.log(userCred.user);
-        })
-        .catch(error => {
-          console.error("Sign up error", error);
-        });
-    }
+        .then((userCred) => {
+          const data ={
+            _id : userCred?.user.uid,
+            fulName : name,
+            ProfilePic : avatar,
+            providerData : userCred.user.providerData[0]
+          }
+          setDoc(doc(firestoreDB, 'users', userCred?.user.uid), data).then(() => {
+            navigation.navigate("LoginScreen");
+          }
+        
+        );
+
+        }
+        
+      );
+        }
   };
 
   return (

@@ -10,17 +10,15 @@ const firebaseConfig = {
   projectId: "nbsc-bsit-chat-app",
   storageBucket: "nbsc-bsit-chat-app.appspot.com",
   messagingSenderId: "400821180400",
-  appId: "1:400821180400:web:fa68e23a2b0714bdf6af35"
+  appId: "1:400821180400:web:2a719ffc2f91cb74f6af35"
 };
-
 
 // Initialize Firebase app
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 
 // Initialize Auth with React Native persistence
-const firebaseAuth = initializeAuth(app, {
-  persistence: getReactNativePersistence(AsyncStorage)
-});
+const firebaseAuth = getAuth(app);
+
 
 // Initialize Firestore
 const firestoreDB = getFirestore(app);
